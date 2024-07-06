@@ -1,0 +1,40 @@
+plugins {
+    id("com.github.johnrengelman.shadow") version "7.1.1"
+    id 'java'
+}
+
+group = 'com.softawii'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'}
+    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    compileOnly 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
+    annotationProcessor 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
+    implementation "dev.triumphteam:triumph-gui:3.1.10"
+    implementation ('org.springframework.boot:spring-boot-starter-data-jpa:2.7.0') {
+        exclude module: 'spring-boot-starter-logging'
+    }
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'com.h2database:h2:2.1.212'
+}
+
+shadowJar {
+    relocate("dev.triumphteam.gui", "dev.triumphteam.gui")
+    def dir = System.getenv("SERVER_PLUGIN_DIR") ?: "build/libs"
+    getDestinationDirectory().set(file(dir))
+}
+
+test {
+    useJUnitPlatform()
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
